@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">FamilyBed</string>
+    <string name="login_admission_number">住&#160;&#160;院&#160;&#160;号：</string>
+    <string name="login_admission_number_tips">请输入住院号</string>
+    <string name="login_register_phone">登记手机：</string>
+    <string name="login_register_phone_tips">请输入住登记手机</string>
+    <string name="action_settings">Settings</string>
+    <string name="register_link"><a href="#" mce_href="#"><font color="#ffffff">《用户协议》</font></a></string>
+    <string name="main_top_info">家庭病床患者终端平台</string>
+    <string name="main_patient_name">刘慧莲(女)</string>
+    <string name="main_patient_number">&#160;&#160;住院号：666</string>
+    <string name="main_patient_department">&#160;&#160;&#160;&#160;科室：家庭病床科</string>
+    <string name="main_patient_disease">&#160;&#160;&#160;&#160;病种：耳鸣</string>
+    <string name="main_patient_bed">已建床92天</string>
+    <string name="main_patient_create_bed_date">建床时间：2023-04-21</string>
+    <string name="main_patient_attending_doctor">主管医生：曹燕</string>
+    <string name="main_patient_patrol_nurse">责任护士：曹燕</string>
+    <string name="main_patient_dietary_guidelines">饮食推荐：普食</string>
+    <string name="main_patient_note">护理等级：家庭病床护理</string>
+    <string name="main_message_note1">2023年6月14日，护士李工进行上门查床。</string>
+    <string name="main_message_note2">2023年6月15日，医生王工进行上门查床。</string>
+    <string name="main_message_note3">2023年6月16日，护士李工进行上门查床。</string>
+    <string name="main_message_note4">2023年6月17日，医生王工进行上门查床。</string>
+    <string name="main_message_task1">2023年6月13日，当日服药3次。</string>
+    <string name="main_message_task2">2023年6月13日，当日体征上报2次。</string>
+    <string name="main_message_task3">2023年6月14日，当日服药3次。</string>
+    <string name="main_message_task4">2023年6月14日，当日体征上报2次。</string>
+    <string-array name="group_info">
+        <item>家庭</item>
+        <item>社区</item>
+        <item>医院</item>
+        <item>其它</item>
+    </string-array>
 </resources>

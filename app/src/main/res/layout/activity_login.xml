@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/bgSpace"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_gravity="center">
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/bgTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@mipmap/home_title">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bgSpace"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center">
+
+    </RelativeLayout>
+    <!--标题-->
+    <RelativeLayout
+        android:id="@+id/bgBottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/login_bg"
+            android:stretchColumns="2"
+            android:gravity="center">
+            <!--第一行-->
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+
+
+                <TextView
+                    android:id="@+id/textViewZhuYuanHao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_admission_number"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"/>
+
+                <EditText
+                    android:id="@+id/editZhuYuanHao"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="5.0dip"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:background="@mipmap/input_big"
+                    android:hint="@string/login_admission_number_tips"
+                    android:textColorHint="#1F6DAB"
+                    android:textSize="24sp"
+                    android:maxLength="12"
+                    android:paddingLeft="5.0sp"
+                    android:labelFor="@id/textViewZhuYuanHao" />
+
+            </TableRow>
+            <!--第二行-->
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textViewPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_register_phone"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"/>
+
+                <EditText
+                    android:id="@+id/editTextPhone"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="5.0dip"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:background="@mipmap/input_big"
+                    android:hint="@string/login_register_phone_tips"
+                    android:textColorHint="#1F6DAB"
+                    android:textSize="24sp"
+                    android:maxLength="12"
+                    android:paddingLeft="5.0sp"
+                    android:labelFor="@id/textViewPhone" />
+            </TableRow>
+            <!--分割线行-->
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/imgLine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:src="@mipmap/line"
+                    android:padding="10dp"/>
+            </TableRow>
+            <!--操作按钮行-->
+            <TableRow
+                android:id="@+id/tableRow4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/btn_gradient"
+                    android:onClick="bClick"
+                    android:tag="tagLogin"
+                    android:text="登录"
+                    android:textSize="24sp" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/resultMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"/>
+            </TableRow>
+
+
+        </TableLayout>
+    </RelativeLayout>
+
+</LinearLayout>

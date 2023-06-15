@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:id="@+id/imageView_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/dialog_bag_jinriyongyao"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/txt_today_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="日期"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_info"
+        app:layout_constraintEnd_toEndOf="@id/imageView_info"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="@id/imageView_info"
+        app:layout_constraintTop_toTopOf="@id/imageView_info"
+        app:layout_constraintVertical_bias="0.1" />
+    <TextView
+        android:id="@+id/txt_period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时段"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_info"
+        app:layout_constraintEnd_toEndOf="@id/imageView_info"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/imageView_info"
+        app:layout_constraintTop_toTopOf="@id/imageView_info"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <ListView
+        android:id="@+id/list_today_medication_child"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="#00000000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_period"/>
+
+    <Button
+        android:id="@+id/btn_take_medicine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:tag="btn_take_medicine"
+        android:background="@mipmap/dialog_yifuyao"
+        android:text="已服药"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/imageView_info"
+        app:layout_constraintEnd_toEndOf="@id/imageView_info"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/imageView_info"
+        app:layout_constraintTop_toTopOf="@id/imageView_info"
+        app:layout_constraintVertical_bias="0.89" />
+</androidx.constraintlayout.widget.ConstraintLayout>
