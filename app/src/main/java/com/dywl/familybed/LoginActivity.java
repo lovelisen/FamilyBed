@@ -1,4 +1,5 @@
 package com.dywl.familybed;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +19,15 @@ import com.dywl.familybed.utils.JSONHelper;
 import com.dywl.familybed.utils.MultipleResult;
 import com.dywl.familybed.utils.WebTool;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private String result;
@@ -28,15 +37,18 @@ public class LoginActivity extends AppCompatActivity {
     private String login_tel;
     private String hospCode;
     private ArrayList<MultipleResult> result_list;
+    private String url_post="http://open.dywyhs.com/project/familybed/wx/wx_AjaxInfo.php";
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             switch (message.what) {
                 case -1:
-                    tv_result.setText("登录失败，请重试。");
+//                    tv_result.setText("登录失败，请重试。");
+                    Toast.makeText(getApplicationContext(), "失败，请重试。", Toast.LENGTH_LONG).show();
                     break;
                 case 0:
 //                    tv_result.setText("登录成功，跳转。");
+                    Toast.makeText(getApplicationContext(), "成功，跳转。", Toast.LENGTH_LONG).show();
                     break;
             }
             return false;
@@ -111,4 +123,84 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //同步请求
+    public void getSync() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .get()
+                        .url("你的后台地址")
+                        .build();
+                Call call = client.newCall(request);
+                try {
+                    //同步发送请求
+                    Response response = call.execute();
+                    if (response.isSuccessful()) {
+                        String s = response.body().string();
+                        System.out.println("text:" + s);
+                        System.out.println("请求成功");
+                    } else {
+                        System.out.println("请求失败");
+                    }
+                } catch (IOException e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    //异步请求
+    public void getAsync() {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("你的后台地址")
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
+                    System.out.println(result);
+                }
+            }
+        });
+    }
+
+    public void post() {
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("type", "fyjl")
+                .add("ids", "1")
+                .add("sd", "早上")
+                .add("Inlet", "App")
+                .build();
+        Request request = new Request.Builder()
+                .url(url_post)
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("响应");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
+                    System.out.println("响应成功："+result);
+                }
+            }
+        });
+    }
 }

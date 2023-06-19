@@ -264,13 +264,13 @@
         android:layout_height="wrap_content"
         android:text="@string/main_message_note1"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="@id/imageView1"
         app:layout_constraintEnd_toEndOf="@id/imageView1"
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="@id/imageView1"
         app:layout_constraintTop_toTopOf="@id/imageView1"
-        app:layout_constraintVertical_bias="0.4"/>
+        app:layout_constraintVertical_bias="0.25"/>
 
 
     <TextView
@@ -279,7 +279,7 @@
         android:layout_height="wrap_content"
         android:text="@string/main_message_note2"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="22sp"
         app:layout_constraintLeft_toLeftOf="@id/main_message_note1"
         app:layout_constraintTop_toBottomOf="@id/main_message_note1" />
 
@@ -313,13 +313,13 @@
         android:layout_height="wrap_content"
         android:text="@string/main_message_task1"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@id/home_dangrirenwu"
         app:layout_constraintEnd_toEndOf="@id/home_dangrirenwu"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="@id/home_dangrirenwu"
         app:layout_constraintTop_toTopOf="@id/home_dangrirenwu"
-        app:layout_constraintVertical_bias="0.15"  />
+        app:layout_constraintVertical_bias="0.25"  />
 
 
     <TextView
@@ -328,27 +328,27 @@
         android:layout_height="wrap_content"
         android:text="@string/main_message_task2"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="@id/main_message_task1"
         app:layout_constraintTop_toBottomOf="@id/main_message_task1" />
-    <TextView
-        android:id="@+id/main_message_task3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_message_task3"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/main_message_task2"
-        app:layout_constraintTop_toBottomOf="@id/main_message_task2" />
-    <TextView
-        android:id="@+id/main_message_task4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_message_task4"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@id/main_message_task3"
-        app:layout_constraintTop_toBottomOf="@id/main_message_task3" />
+<!--    <TextView-->
+<!--        android:id="@+id/main_message_task3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/main_message_task3"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintLeft_toLeftOf="@id/main_message_task2"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/main_message_task2" />-->
+<!--    <TextView-->
+<!--        android:id="@+id/main_message_task4"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/main_message_task4"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintLeft_toLeftOf="@id/main_message_task3"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/main_message_task3" />-->
 <!--    <ImageView-->
 <!--        android:id="@+id/home_dangrirenwu_right"-->
 <!--        android:layout_width="wrap_content"-->

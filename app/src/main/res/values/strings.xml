@@ -17,12 +17,12 @@
     <string name="main_patient_patrol_nurse">责任护士：曹燕</string>
     <string name="main_patient_dietary_guidelines">饮食推荐：普食</string>
     <string name="main_patient_note">护理等级：家庭病床护理</string>
-    <string name="main_message_note1">2023年6月14日，护士李工进行上门查床。</string>
-    <string name="main_message_note2">2023年6月15日，医生王工进行上门查床。</string>
+    <string name="main_message_note1">6月20日，护士李工上门查床。</string>
+    <string name="main_message_note2">6月22日，医生王工上门查床。</string>
     <string name="main_message_note3">2023年6月16日，护士李工进行上门查床。</string>
     <string name="main_message_note4">2023年6月17日，医生王工进行上门查床。</string>
-    <string name="main_message_task1">2023年6月13日，当日服药3次。</string>
-    <string name="main_message_task2">2023年6月13日，当日体征上报2次。</string>
+    <string name="main_message_task1">6月19日，服药4次。</string>
+    <string name="main_message_task2">6月19日，体征上报2次。</string>
     <string name="main_message_task3">2023年6月14日，当日服药3次。</string>
     <string name="main_message_task4">2023年6月14日，当日体征上报2次。</string>
     <string-array name="group_info">

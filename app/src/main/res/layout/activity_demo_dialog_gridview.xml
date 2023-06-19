@@ -2,16 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
-    <!--numColumns设置每行显示多少个-->
-    <GridView
-        android:id="@+id/grid_today_medication"
+    <RelativeLayout
+        android:id="@+id/titlelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="300dp"
-        android:stretchMode="spacingWidthUniform"
-        android:numColumns="3" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#38a1fc"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="今日用药提醒"
+            android:paddingLeft="5dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_cancle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_selctor_exit" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlelayout"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <!--numColumns设置每行显示多少个-->
+        <GridView
+            android:id="@+id/grid_today_medication"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="220dp"
+            android:numColumns="4"
+            android:stretchMode="spacingWidthUniform" />
+    </LinearLayout>
 
 </LinearLayout>

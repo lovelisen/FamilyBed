@@ -19,6 +19,7 @@ public class TodaysMedicationBeanChild {
     }
 
     public void setDrug(String drug) {
+
         this.drug = drug;
     }
 
@@ -51,6 +52,14 @@ public class TodaysMedicationBeanChild {
     }
 
     public void setEntrust(String entrust) {
-        this.entrust = entrust;
+
+        if (!String.valueOf(entrust).isEmpty()) {
+            if (String.valueOf(entrust).equals("null")) {
+                this.entrust = "无";
+
+            } else {
+                this.entrust = entrust;
+            }
+        }
     }
 }

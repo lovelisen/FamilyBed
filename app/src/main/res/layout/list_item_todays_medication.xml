@@ -25,7 +25,7 @@
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="@id/imageView_info"
         app:layout_constraintTop_toTopOf="@id/imageView_info"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.01" />
     <TextView
         android:id="@+id/txt_period"
         android:layout_width="wrap_content"
@@ -35,10 +35,10 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@id/imageView_info"
         app:layout_constraintEnd_toEndOf="@id/imageView_info"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="@id/imageView_info"
         app:layout_constraintTop_toTopOf="@id/imageView_info"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.009" />
 
     <ListView
         android:id="@+id/list_today_medication_child"
@@ -57,11 +57,12 @@
         android:tag="btn_take_medicine"
         android:background="@mipmap/dialog_yifuyao"
         android:text="已服药"
+        android:textSize="24sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/imageView_info"
         app:layout_constraintEnd_toEndOf="@id/imageView_info"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/imageView_info"
         app:layout_constraintTop_toTopOf="@id/imageView_info"
-        app:layout_constraintVertical_bias="0.89" />
+        app:layout_constraintVertical_bias="0.99" />
 </androidx.constraintlayout.widget.ConstraintLayout>

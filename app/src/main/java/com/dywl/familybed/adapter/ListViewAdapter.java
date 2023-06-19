@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -154,6 +155,8 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
             View view = getView(id);
             if (view instanceof TextView) {
                 ((TextView) view).setText(text);
+            } else if (view instanceof Button) {
+                ((Button) view).setText(text);
             }
             return this;
         }
@@ -167,12 +170,12 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
                 listView.setAdapter(adapter);
             }
             int totalHeight = 0;
-            int totalWidth = 0;
+            int totalWidth = 424;
             for (int i = 0, len = adapter.getCount(); i < len; i++) {   //listAdapter.getCount()返回数据项的数目
 
                 listView.measure(0, 0);  //计算子项View 的宽高
                 totalHeight += listView.getMeasuredHeight();  //统计所有子项的总高度
-                totalWidth += listView.getMeasuredWidth();
+//                totalWidth += listView.getMeasuredWidth()+20;
             }
             ViewGroup.LayoutParams params = listView.getLayoutParams();
             params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));

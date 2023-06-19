@@ -7,6 +7,9 @@ public class TodaysMedicationBean {
     private String todaysDate;
     // 时段
     private String period;
+    private String used;
+
+    private String ids;
 
 
     public ListViewAdapter<TodaysMedicationBeanChild> getAdapter() {
@@ -36,5 +39,18 @@ public class TodaysMedicationBean {
         this.period = period;
     }
 
+    public void setUsed(String used) {
+        this.used = used;
+    }
+    public String getUsed() {
+        return used;
+    }
 
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
 }
