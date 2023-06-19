@@ -24,7 +24,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/bgSpace"
+        android:id="@+id/bgSpace2"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="center">
