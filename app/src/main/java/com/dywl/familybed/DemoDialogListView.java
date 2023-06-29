@@ -76,7 +76,7 @@ public class DemoDialogListView extends AppCompatActivity {
 
     private void init() {
 
-        list_today_medication = (ListView) view_custom.findViewById(R.id.list_today_medication);
+        list_today_medication = (ListView) view_custom.findViewById(R.id.list_physical_sign);
         list_today_medication_child = (ListView) view_custom.findViewById(R.id.list_today_medication_child);
 
         dataTodaysMedicationBean = new ArrayList<TodaysMedicationBean>();

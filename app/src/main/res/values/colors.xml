@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color><!--黑色 -->
     <color name="white">#FFFFFFFF</color><!--白色 -->
     <color name="transparent">#60000000</color>
+
+    <color name="main_color">#2D73E2</color>>
 </resources>

@@ -25,6 +25,7 @@
     <string name="main_message_task2">6月19日，体征上报2次。</string>
     <string name="main_message_task3">2023年6月14日，当日服药3次。</string>
     <string name="main_message_task4">2023年6月14日，当日体征上报2次。</string>
+    <string name="main_PhysicalSign">体征指标档案</string>
     <string-array name="group_info">
         <item>家庭</item>
         <item>社区</item>

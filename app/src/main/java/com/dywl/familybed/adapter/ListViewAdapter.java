@@ -1,12 +1,14 @@
 package com.dywl.familybed.adapter;
 
 import android.content.Context;
+import android.text.InputType;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -161,6 +163,24 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
             return this;
         }
 
+        /**
+         * 设置文字
+         */
+        public ViewHolder setHintText(int id, CharSequence text) {
+            View view = getView(id);
+            if (view instanceof EditText) {
+                ((EditText) view).setHint(text);
+            }
+            return this;
+        }
+        public ViewHolder setInputType(int id, int inputType) {
+            View view = getView(id);
+            if (view instanceof EditText) {
+                ((EditText) view).setInputType(inputType);
+            }
+            return this;
+        }
+
         public ViewHolder setAdapter(int id, ListAdapter adapter) {
 
             View view = getView(id);
@@ -213,7 +233,19 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
          * 设置可见
          */
         public ViewHolder setVisibility(int id, int visible) {
-            getView(id).setVisibility(visible);
+
+            if (visible == View.GONE) {
+                View view = getView(id);
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                params.height = 0;
+                //listView.getDividerHeight()获取子项间分隔符占用的高度
+                //params.height最后得到整个ListView完整显示需要的高度
+
+                params.width = 0;
+                view.setLayoutParams(params);
+            } else {
+                getView(id).setVisibility(visible);
+            }
             return this;
         }
 

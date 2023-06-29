@@ -5,12 +5,70 @@
     android:orientation="vertical"
     >
 
+    <RelativeLayout
+        android:id="@+id/titlelayout"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#38a1fc"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="体征上报"
+            android:paddingLeft="5dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_cancle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_selctor_exit" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_detail"
+        android:layout_width="400dp"
+        android:layout_height="350dp"
+        android:layout_below="@+id/titlelayout"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
     <ListView
-        android:id="@+id/list_today_medication"
+        android:id="@+id/list_physical_sign"
+        android:layout_width="400dp"
+        android:scrollbars="none"
+        android:listSelector="@android:color/transparent"
+        android:divider="@null"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_height="230dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_physical_sign_count"
+            android:paddingLeft="25dp"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_save_physical_sign"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-
-
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="上报"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_selctor_save" />
 
 </LinearLayout>

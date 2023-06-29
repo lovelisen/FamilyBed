@@ -8,6 +8,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -17,10 +20,13 @@ import android.widget.Toast;
 import com.dywl.familybed.model.FamilyBedModelBean;
 import com.dywl.familybed.utils.JSONHelper;
 import com.dywl.familybed.utils.MultipleResult;
-import com.dywl.familybed.utils.WebTool;
+import com.dywl.familybed.utils.ToastUtil;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,16 +43,16 @@ public class LoginActivity extends AppCompatActivity {
     private String login_tel;
     private String hospCode;
     private ArrayList<MultipleResult> result_list;
-    private String url_post="http://open.dywyhs.com/project/familybed/wx/wx_AjaxInfo.php";
+
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             switch (message.what) {
-                case -1:
+                case ServerUrl.handler_error:
 //                    tv_result.setText("登录失败，请重试。");
                     Toast.makeText(getApplicationContext(), "失败，请重试。", Toast.LENGTH_LONG).show();
                     break;
-                case 0:
+                case ServerUrl.handler_success:
 //                    tv_result.setText("登录成功，跳转。");
                     Toast.makeText(getApplicationContext(), "成功，跳转。", Toast.LENGTH_LONG).show();
                     break;
@@ -55,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     });
 
+    private TextToSpeech mTTs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +75,30 @@ public class LoginActivity extends AppCompatActivity {
         editTextPhone = (EditText) findViewById(R.id.editTextPhone);
         //默认焦点设置在用户名上
         editZhuYuanHao.requestFocus();
+//        getSync();
 
+        mTTs = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status == TextToSpeech.SUCCESS){
+                    int intResult = mTTs.setLanguage(Locale.CHINESE);
+                    if(intResult==TextToSpeech.LANG_MISSING_DATA||intResult==TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("mTTs","语言不支持");
+                    }
+                }else {
+                    Log.e("mTTs","初始化失败");
+                }
+
+            }
+        });
+    }
+    @Override
+    protected void onDestroy() {
+        if(mTTs!=null){
+            mTTs.stop();
+            mTTs.shutdown();
+        }
+        super.onDestroy();
     }
 
     public void bClick(View v) {
@@ -77,86 +107,76 @@ public class LoginActivity extends AppCompatActivity {
             login_tel = editTextPhone.getText().toString().trim();
 //            Toast.makeText(getApplicationContext(), "登录事件", Toast.LENGTH_LONG).show();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        //在新线程中获取数据，通过handler判断是否获取到数据
-                        //n为向PHP传输的数据
-                        String n = "本地测试数据";
-                        result = WebTool.singleData("http://open.dywyhs.com/project/familybed/manage/api/api_padLogin.php?func=login&tel=" + login_tel + "&hospCode=" + hospCode);
+//            mTTs.speak(hospCode,TextToSpeech.QUEUE_FLUSH,null);
+            if (TextUtils.isEmpty(hospCode)) {
+                ToastUtil.showToast("请输入住院号！");
+                return;
+            }
+            if (TextUtils.isEmpty(login_tel)) {
+                ToastUtil.showToast("请输入登记手机！");
+                return;
+            }
 
-                        if (!result.equals("failed")) {
-
-//                            handler.sendEmptyMessage(0);
-
-                            if (result.contains("登录失败")) {
-
-                                handler.sendEmptyMessage(-1);
-
-                            } else {
-                                FamilyBedModelBean familyBedModelBean = JSONHelper.parseObject(result, FamilyBedModelBean.class);
-
-                                //登录成功后跳转页面
-                                Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("familyBedModelBean", familyBedModelBean);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-
-                                //完成跳转，关闭此activity（避免返回至此）
-                                finish();
-                            }
-
-                        } else {
-                            handler.sendEmptyMessage(-1);
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
+            getSync(login_tel,hospCode);
 
         }
 
     }
 
     //同步请求
-    public void getSync() {
+    public void getSync(String strTel,String strHospCode) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .get()
-                        .url("你的后台地址")
+                        .url(ServerUrl.get_login + strTel + "&hospCode=" + strHospCode)
                         .build();
                 Call call = client.newCall(request);
                 try {
                     //同步发送请求
                     Response response = call.execute();
                     if (response.isSuccessful()) {
-                        String s = response.body().string();
-                        System.out.println("text:" + s);
-                        System.out.println("请求成功");
+                        String strResult = response.body().string();
+
+
+                        FamilyBedModelBean familyBedModelBean = JSONHelper.parseObject(strResult, FamilyBedModelBean.class);
+
+                        //登录成功后跳转页面
+                        Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("familyBedModelBean", familyBedModelBean);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+
+                        //完成跳转，关闭此activity（避免返回至此）
+                        finish();
+//                        System.out.println("text:" + strResult);
+//                        System.out.println("请求成功");
+
+                        handler.sendEmptyMessage(ServerUrl.handler_success);
                     } else {
-                        System.out.println("请求失败");
+//                        System.out.println("请求失败");
+                        handler.sendEmptyMessage(ServerUrl.handler_error);
                     }
                 } catch (IOException e) {
-                    System.out.println("error");
+//                    System.out.println("error");
+                    handler.sendEmptyMessage(ServerUrl.handler_error);
                     e.printStackTrace();
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(ServerUrl.handler_error);
+                    throw new RuntimeException(e);
                 }
             }
         }).start();
     }
 
     //异步请求
-    public void getAsync() {
+    public void getAsync(String strBedID) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("你的后台地址")
+                .url(ServerUrl.get_today_medication +strBedID)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -184,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                 .add("Inlet", "App")
                 .build();
         Request request = new Request.Builder()
-                .url(url_post)
+                .url(ServerUrl.base_url_post)
                 .post(body)
                 .build();
         Call call = client.newCall(request);

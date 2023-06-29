@@ -320,7 +320,7 @@ public class JSONHelper {
                     fieldSetMethod.invoke(obj, temp);
                 } else {
                     fieldSetMethod.invoke(obj, value);
-                    Log.e(TAG, TAG  + ">>>>setFiedlValue -> not supper type" + fieldType);
+//                    Log.e(TAG, TAG  + ">>>>setFiedlValue -> not supper type" + fieldType);
                 }
             }
 
