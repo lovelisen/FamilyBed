@@ -2,19 +2,15 @@ package com.dywl.familybed;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.InputType;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -51,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -87,6 +84,7 @@ public class MainFamilyBed extends Activity {
     private List<TodaysMedicationJsonDrug> listTodaysMedicationJsonDrug = null;
     private List<TodaysMedicationJsonUsed> listTodaysMedicationJsonUsed = null;
 
+    private TextToSpeech mTTs;
     // region 在主线程中定义Handler
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -100,69 +98,16 @@ public class MainFamilyBed extends Activity {
 //                    tv_result.setText("登录失败，请重试。");
                     Toast.makeText(getApplicationContext(), "失败，请重试。", Toast.LENGTH_LONG).show();
                     break;
-                case ServerUrl.handler_success_physical_sign_get:
-//                    tv_result.setText("登录成功，跳转。");
-//                    Toast.makeText(getApplicationContext(), "成功，跳转。", Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getApplicationContext(), "今日用药", Toast.LENGTH_LONG).show();
+                case ServerUrl.handler_success_today_medication_get:
                     try {
                         String strResult = message.getData().getString("strResult");
+                        TodaysMedicationJsonBean todaysMedicationJsonBean = JSONHelper.parseObject(strResult, TodaysMedicationJsonBean.class);
 
-                        PhysicalSignJsonBean physicalSignJsonBean = JSONHelper.parseObject(strResult, PhysicalSignJsonBean.class);
-                        initPhysicalSign(physicalSignJsonBean);
+
+                        init(todaysMedicationJsonBean);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println("请求成功");
-                    break;
-                case ServerUrl.handler_success_daily_reporting_get:
-                    try {
-                        String strResult = message.getData().getString("strResult");
-
-                        int count_sb_num = Integer.parseInt(familyBedModelBean.getData().getSbNum());
-                        int set_sb_time = Integer.parseInt(familyBedModelBean.getData().getSbZq());
-
-                        TextView tv_physical_sign_count = (TextView) view_custom_list.findViewById(R.id.tv_physical_sign_count);
-                        Button btn_save_physical_sign = (Button) view_custom_list.findViewById(R.id.btn_save_physical_sign);
-                        MeiriSbJsonBean meiriSbJsonBean = JSONHelper.parseObject(strResult, MeiriSbJsonBean.class);
-                        int count_data = meiriSbJsonBean.getData().getMeiriSb().size();
-                        int tv_count_data = count_data + 1;
-
-                        String view_sb_time = "";
-                        for (MeiriSbJsonModel meiriSbJsonModel : meiriSbJsonBean.getData().getMeiriSb()) {
-                            view_sb_time = meiriSbJsonModel.getSbTime();
-                        }
-
-                        String view_sb_time_next = "";
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        SimpleDateFormat sdf_v = new SimpleDateFormat();
-                        sdf_v.applyPattern("HH:mm:ss");
-                        try {
-                            Date createDate = sdf.parse(view_sb_time);
-
-                            // 获取当前时间
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(createDate);
-                            cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) + set_sb_time);
-                            view_sb_time_next = sdf_v.format(cal.getTime());
-                        } catch (ParseException parseException) {
-                            parseException.printStackTrace();
-                        }
-
-                        String view_text = "";
-                        if (count_data == 0) {
-                            view_text = "今日推荐上报" + count_sb_num + "次体征，当前是第" + tv_count_data + "次上报。\n";
-                        } else if (count_data > 0 && count_data < count_sb_num) {
-                            view_text = "今日推荐上报" + count_sb_num + "次体征，当前是第" + tv_count_data + "次上报。\n" +
-                                    "上次上报时间是" + view_sb_time + "\n本次上报推荐时间在" + view_sb_time_next + "之后。";
-                        } else if (count_data >= count_sb_num) {
-                            view_text = "今日推荐上报" + count_sb_num + "次体征，您已上报完成" + count_data + "次。";
-                            btn_save_physical_sign.setVisibility(View.GONE);
-                        }
-                        tv_physical_sign_count.setText(view_text);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    System.out.println("请求成功");
                     break;
             }
             return false;
@@ -178,8 +123,10 @@ public class MainFamilyBed extends Activity {
 
         SysExitUtil.activityList.add(MainFamilyBed.this);
 
-        Intent intent = super.getIntent();
-        familyBedModelBean = (FamilyBedModelBean) intent.getSerializableExtra("familyBedModelBean");
+//        Intent intent = super.getIntent();
+//        familyBedModelBean = (FamilyBedModelBean) intent.getSerializableExtra("familyBedModelBean");
+
+        familyBedModelBean = MyApp.getFamilyBedModelBean();
 
         // region 数据初始化：患者基本信息模块
         textView1 = findViewById(R.id.main_patient_name);
@@ -266,9 +213,9 @@ public class MainFamilyBed extends Activity {
 //        }).create();
 //        alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 //        alert_list.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        alert_list.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
-                WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        alert_list.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        alert_list.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+//                WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+//        alert_list.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 ////        alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 ////        alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -289,63 +236,14 @@ public class MainFamilyBed extends Activity {
         });
         // endregion  弹出框初始化：今日用药、体征上报
 
-        // region 点击事件：数据提交-体征上报
-        view_custom_list.findViewById(R.id.btn_save_physical_sign).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                ListView list_today_physical_sign = (ListView) view_custom_list.findViewById(R.id.list_physical_sign);
-                int listChildCount = list_today_physical_sign.getChildCount();
-//                System.out.println("控件数："+listChildCount);
-
-
-                String bedid = familyBedModelBean.getData().getID();
-                String id = ""; // 如果是更新模式，则从参数中获取，否则为空。
-                ArrayList<String> array_mc = new ArrayList<String>();
-                ArrayList<String> array_zb = new ArrayList<String>();
-                String Xy1 = "";
-                String Xy2 = "";
-
-                for (int i = 0; i < listChildCount; i++) {
-                    View view = list_today_physical_sign.getChildAt(i);
-                    TextView txt_name = (TextView) view.findViewById(R.id.txt_name);
-                    EditText txt_name_value = (EditText) view.findViewById(R.id.txt_name_value);
-                    EditText txt_name_value_left = (EditText) view.findViewById(R.id.txt_name_value_left);
-                    EditText txt_name_value_right = (EditText) view.findViewById(R.id.txt_name_value_right);
-                    TextView txt_unit = (TextView) view.findViewById(R.id.txt_unit);
-                    // 名称
-                    array_mc.add(txt_name.getText().toString());
-                    if (txt_name.getText().equals("血压")) {
-                        // 高压值
-                        Xy1 = txt_name_value_left.getText().toString();
-                        // 低压值
-                        Xy2 = txt_name_value_right.getText().toString();
-                        // 指标值
-                        array_zb.add(Xy1 + "/" + Xy2);
-
-                    } else {
-                        // 指标值
-                        array_zb.add(txt_name_value.getText().toString());
-                    }
-
-                }
-
-                post_tzsb(bedid, id, array_mc, array_zb, Xy1, Xy2);
-
-                alert_list.dismiss();
-            }
-        });
-        // endregion 点击事件：数据提交-体征上报
-
         // region 点击事件：弹出页面-体征上报
         imageView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSync(familyBedModelBean.getData().getID());
-                getMeiRiSb(familyBedModelBean.getData().getID());
 
-                alert_list.show();
+                Intent intent = new Intent(MainFamilyBed.this, DailyReportingActivity.class);
+                startActivity(intent);
+
             }
         });
         // endregion 点击事件：弹出页面-体征上报
@@ -356,15 +254,27 @@ public class MainFamilyBed extends Activity {
             public void onClick(View v) {
 
                 getTodaysMedicationData();
-                try {
-                    Thread.sleep(400);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+
                 alert.show();
             }
         });
         // endregion 点击事件：弹出页面-今日用药
+
+
+        mTTs = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int intResult = mTTs.setLanguage(Locale.CHINESE);
+                    if (intResult == TextToSpeech.LANG_MISSING_DATA || intResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("mTTs", "语言不支持");
+                    }
+                } else {
+                    Log.e("mTTs", "初始化失败");
+                }
+
+            }
+        });
     }
     // endregion 实现onCreate抽象方法
 
@@ -376,17 +286,19 @@ public class MainFamilyBed extends Activity {
             public void run() {
                 try {
                     //在新线程中获取数据，通过handler判断是否获取到数据
-                    String result = WebTool.singleData("http://open.dywyhs.com/project/familybed/manage/api/api_padLogin.php?func=getDrug&BedID=" + familyBedModelBean.getData().getID());
+                    String result = WebTool.singleData(ServerUrl.get_today_medication + familyBedModelBean.getData().getID());
 
                     if (!result.equals("failed")) {
 
-                        handler.sendEmptyMessage(ServerUrl.handler_success);
 
                         if (result.contains("成功")) {
-                            TodaysMedicationJsonBean todaysMedicationJsonBean = JSONHelper.parseObject(result, TodaysMedicationJsonBean.class);
-
-
-                            init(todaysMedicationJsonBean);
+                            // 创建消息
+                            Message msg = new Message();
+                            Bundle bundle = new Bundle();
+                            msg.what = ServerUrl.handler_success_today_medication_get;
+                            bundle.putString("strResult", result);
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
                         } else {
 
                             handler.sendEmptyMessage(ServerUrl.handler_error);
@@ -435,61 +347,13 @@ public class MainFamilyBed extends Activity {
         String ids_WanShang = "";
         String ids_ShuiQian = "";
 
-        for (TodaysMedicationJsonDrug itemTodaysMedicationJsonDrug : todaysMedicationJsonData.getDrug()) {
+        String voice_ZaoShang = "";
+        String voice_ZhongWu = "";
+        String voice_WanShang = "";
+        String voice_ShuiQian = "";
 
-//            String[] strPeriodList = itemTodaysMedicationJsonDrug.getPeriod().split(",");
-//            char[] strPeriodList = itemTodaysMedicationJsonDrug.getPeriod().toCharArray();
-            JSONArray array = new JSONArray(itemTodaysMedicationJsonDrug.getPeriod());
+        String name = familyBedModelBean.getData().getName();
 
-            for (int i = 0; i < array.length(); i++) {
-
-                String strPeriod = array.get(i).toString();
-                // region 早上、中午、晚上、睡前各阶段用药信息数据
-                if (strPeriod.equals("早上")) {
-                    TodaysMedicationBeanChild todaysMedicationBeanChild_ZaoShang = new TodaysMedicationBeanChild();
-                    todaysMedicationBeanChild_ZaoShang.setDrug(itemTodaysMedicationJsonDrug.getDrug());
-                    todaysMedicationBeanChild_ZaoShang.setUsage(itemTodaysMedicationJsonDrug.getUsage());
-                    todaysMedicationBeanChild_ZaoShang.setNote(itemTodaysMedicationJsonDrug.getNote());
-                    todaysMedicationBeanChild_ZaoShang.setEntrust(itemTodaysMedicationJsonDrug.getEntrust());
-
-                    ids_ZaoShang += itemTodaysMedicationJsonDrug.getID() + ",";
-
-                    dataTodaysMedicationBeanChild_ZaoShang.add(todaysMedicationBeanChild_ZaoShang);
-                } else if (strPeriod.equals("中午")) {
-                    TodaysMedicationBeanChild todaysMedicationBeanChild_ZhongWu = new TodaysMedicationBeanChild();
-                    todaysMedicationBeanChild_ZhongWu.setDrug(itemTodaysMedicationJsonDrug.getDrug());
-                    todaysMedicationBeanChild_ZhongWu.setUsage(itemTodaysMedicationJsonDrug.getUsage());
-                    todaysMedicationBeanChild_ZhongWu.setNote(itemTodaysMedicationJsonDrug.getNote());
-                    todaysMedicationBeanChild_ZhongWu.setEntrust(itemTodaysMedicationJsonDrug.getEntrust());
-
-                    ids_ZhongWu += itemTodaysMedicationJsonDrug.getID() + ",";
-
-                    dataTodaysMedicationBeanChild_ZhongWu.add(todaysMedicationBeanChild_ZhongWu);
-                } else if (strPeriod.equals("晚上")) {
-                    TodaysMedicationBeanChild todaysMedicationBeanChild_WanShang = new TodaysMedicationBeanChild();
-                    todaysMedicationBeanChild_WanShang.setDrug(itemTodaysMedicationJsonDrug.getDrug());
-                    todaysMedicationBeanChild_WanShang.setUsage(itemTodaysMedicationJsonDrug.getUsage());
-                    todaysMedicationBeanChild_WanShang.setNote(itemTodaysMedicationJsonDrug.getNote());
-                    todaysMedicationBeanChild_WanShang.setEntrust(itemTodaysMedicationJsonDrug.getEntrust());
-
-                    ids_WanShang += itemTodaysMedicationJsonDrug.getID() + ",";
-
-                    dataTodaysMedicationBeanChild_WanShang.add(todaysMedicationBeanChild_WanShang);
-
-                } else if (strPeriod.equals("睡前")) {
-                    TodaysMedicationBeanChild todaysMedicationBeanChild_ShuiQian = new TodaysMedicationBeanChild();
-                    todaysMedicationBeanChild_ShuiQian.setDrug(itemTodaysMedicationJsonDrug.getDrug());
-                    todaysMedicationBeanChild_ShuiQian.setUsage(itemTodaysMedicationJsonDrug.getUsage());
-                    todaysMedicationBeanChild_ShuiQian.setNote(itemTodaysMedicationJsonDrug.getNote());
-                    todaysMedicationBeanChild_ShuiQian.setEntrust(itemTodaysMedicationJsonDrug.getEntrust());
-
-                    ids_ShuiQian += itemTodaysMedicationJsonDrug.getID() + ",";
-
-                    dataTodaysMedicationBeanChild_ShuiQian.add(todaysMedicationBeanChild_ShuiQian);
-                }
-                // endregion
-            }
-        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         // 获取当前时间
@@ -503,20 +367,95 @@ public class MainFamilyBed extends Activity {
                 todaysMedicationBean_ZaoShang.setPeriod(strPeriod);
                 todaysMedicationBean_ZaoShang.setTodaysDate(createDateFormat);
                 todaysMedicationBean_ZaoShang.setUsed(itemTodaysMedicationJsonUsed.getUsed());
+                voice_ZaoShang += "姓名：" + name + "，今天是" + createDateFormat + "，现在播报您" + strPeriod + "的用药提醒：";
             } else if (strPeriod.equals("中午")) {
                 todaysMedicationBean_ZhongWu.setPeriod(strPeriod);
                 todaysMedicationBean_ZhongWu.setTodaysDate(createDateFormat);
                 todaysMedicationBean_ZhongWu.setUsed(itemTodaysMedicationJsonUsed.getUsed());
+                voice_ZhongWu += "姓名：" + name + "，今天是" + createDateFormat + "，现在播报您" + strPeriod + "的用药提醒：";
             } else if (strPeriod.equals("晚上")) {
                 todaysMedicationBean_WanShang.setPeriod(strPeriod);
                 todaysMedicationBean_WanShang.setTodaysDate(createDateFormat);
                 todaysMedicationBean_WanShang.setUsed(itemTodaysMedicationJsonUsed.getUsed());
+                voice_WanShang += "姓名：" + name + "，今天是" + createDateFormat + "，现在播报您" + strPeriod + "的用药提醒：";
             } else if (strPeriod.equals("睡前")) {
                 todaysMedicationBean_ShuiQian.setUsed(itemTodaysMedicationJsonUsed.getUsed());
                 todaysMedicationBean_ShuiQian.setPeriod(strPeriod);
                 todaysMedicationBean_ShuiQian.setTodaysDate(createDateFormat);
+                voice_ShuiQian += "姓名：" + name + "，今天是" + createDateFormat + "，现在播报您" + strPeriod + "的用药提醒：";
             }
         }
+
+        for (TodaysMedicationJsonDrug itemTodaysMedicationJsonDrug : todaysMedicationJsonData.getDrug()) {
+
+//            String[] strPeriodList = itemTodaysMedicationJsonDrug.getPeriod().split(",");
+//            char[] strPeriodList = itemTodaysMedicationJsonDrug.getPeriod().toCharArray();
+            JSONArray array = new JSONArray(itemTodaysMedicationJsonDrug.getPeriod());
+
+            for (int i = 0; i < array.length(); i++) {
+                // 时段
+                String strPeriod = array.get(i).toString();
+                // 药品名称
+                String drug = itemTodaysMedicationJsonDrug.getDrug();
+                // 用法
+                String usage = itemTodaysMedicationJsonDrug.getUsage();
+                // 剂量
+                String note = itemTodaysMedicationJsonDrug.getNote();
+                // 嘱托
+                String entrust = itemTodaysMedicationJsonDrug.getEntrust();
+
+                // region 早上、中午、晚上、睡前各阶段用药信息数据
+                if (strPeriod.equals("早上")) {
+                    TodaysMedicationBeanChild todaysMedicationBeanChild_ZaoShang = new TodaysMedicationBeanChild();
+                    todaysMedicationBeanChild_ZaoShang.setDrug(drug);
+                    todaysMedicationBeanChild_ZaoShang.setUsage(usage);
+                    todaysMedicationBeanChild_ZaoShang.setNote(note);
+                    todaysMedicationBeanChild_ZaoShang.setEntrust(entrust);
+
+                    ids_ZaoShang += itemTodaysMedicationJsonDrug.getID() + ",";
+
+                    voice_ZaoShang += "，药品名称：" + drug + "，用法：" + usage + "，剂量：" + note + "，嘱托：" + entrust;
+
+                    dataTodaysMedicationBeanChild_ZaoShang.add(todaysMedicationBeanChild_ZaoShang);
+                } else if (strPeriod.equals("中午")) {
+                    TodaysMedicationBeanChild todaysMedicationBeanChild_ZhongWu = new TodaysMedicationBeanChild();
+                    todaysMedicationBeanChild_ZhongWu.setDrug(drug);
+                    todaysMedicationBeanChild_ZhongWu.setUsage(usage);
+                    todaysMedicationBeanChild_ZhongWu.setNote(note);
+                    todaysMedicationBeanChild_ZhongWu.setEntrust(entrust);
+
+                    ids_ZhongWu += itemTodaysMedicationJsonDrug.getID() + ",";
+                    voice_ZhongWu += "，药品名称：" + drug + "，用法：" + usage + "，剂量：" + note + "，嘱托：" + entrust;
+
+                    dataTodaysMedicationBeanChild_ZhongWu.add(todaysMedicationBeanChild_ZhongWu);
+                } else if (strPeriod.equals("晚上")) {
+                    TodaysMedicationBeanChild todaysMedicationBeanChild_WanShang = new TodaysMedicationBeanChild();
+                    todaysMedicationBeanChild_WanShang.setDrug(drug);
+                    todaysMedicationBeanChild_WanShang.setUsage(usage);
+                    todaysMedicationBeanChild_WanShang.setNote(note);
+                    todaysMedicationBeanChild_WanShang.setEntrust(entrust);
+
+                    ids_WanShang += itemTodaysMedicationJsonDrug.getID() + ",";
+                    voice_WanShang += "，药品名称：" + drug + "，用法：" + usage + "，剂量：" + note + "，嘱托：" + entrust;
+
+                    dataTodaysMedicationBeanChild_WanShang.add(todaysMedicationBeanChild_WanShang);
+
+                } else if (strPeriod.equals("睡前")) {
+                    TodaysMedicationBeanChild todaysMedicationBeanChild_ShuiQian = new TodaysMedicationBeanChild();
+                    todaysMedicationBeanChild_ShuiQian.setDrug(drug);
+                    todaysMedicationBeanChild_ShuiQian.setUsage(usage);
+                    todaysMedicationBeanChild_ShuiQian.setNote(note);
+                    todaysMedicationBeanChild_ShuiQian.setEntrust(entrust);
+
+                    ids_ShuiQian += itemTodaysMedicationJsonDrug.getID() + ",";
+                    voice_ShuiQian += "，药品名称：" + drug + "，用法：" + usage + "，剂量：" + note + "，嘱托：" + entrust;
+
+                    dataTodaysMedicationBeanChild_ShuiQian.add(todaysMedicationBeanChild_ShuiQian);
+                }
+                // endregion
+            }
+        }
+
 
         todaysMedicationAdapterChild_ZaoShang = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ZaoShang, R.layout.list_item_todays_medication_child) {
             @Override
@@ -584,6 +523,11 @@ public class MainFamilyBed extends Activity {
         todaysMedicationBean_WanShang.setIds(ids_WanShang);
         todaysMedicationBean_ShuiQian.setIds(ids_ShuiQian);
 
+        todaysMedicationBean_ZaoShang.setVoices(voice_ZaoShang);
+        todaysMedicationBean_ZhongWu.setVoices(voice_ZhongWu);
+        todaysMedicationBean_WanShang.setVoices(voice_WanShang);
+        todaysMedicationBean_ShuiQian.setVoices(voice_ShuiQian);
+
 
         dataTodaysMedicationBean.add(todaysMedicationBean_ZaoShang);
         dataTodaysMedicationBean.add(todaysMedicationBean_ZhongWu);
@@ -598,9 +542,17 @@ public class MainFamilyBed extends Activity {
                 holder.setAdapter(R.id.list_today_medication_child, obj.getAdapter());
                 holder.setText(R.id.btn_take_medicine, obj.getUsed());
                 holder.setTag(R.id.btn_take_medicine, familyBedModelBean.getData().getPatientID() + "!" + familyBedModelBean.getData().getID() + "!" + obj.getPeriod() + "!" + obj.getIds());
+                holder.setTag(R.id.imageView_voice_ico, obj.getVoices());
                 if (obj.getUsed().equals("未服药")) {
                     holder.setImageResource(R.id.btn_take_medicine, R.mipmap.dialog_weifuyao);
                 }
+                holder.setOnClickListener(R.id.imageView_voice_ico, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mTTs.speak(v.getTag().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                });
                 holder.setOnClickListener(R.id.btn_take_medicine, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -659,59 +611,6 @@ public class MainFamilyBed extends Activity {
     }
     // endregion 计算两个日期之间相差的天数
 
-    // region 数据提交：体征上报
-
-    /**
-     * 体征上报
-     *
-     * @param bedid    病床号
-     * @param id       序号
-     * @param array_mc 名称
-     * @param array_zb 指标
-     * @param Xy1      血压1
-     * @param Xy2      血压2
-     */
-    public void post_tzsb(String bedid, String id, ArrayList<String> array_mc, ArrayList<String> array_zb, String Xy1, String Xy2) {
-        OkHttpClient client = new OkHttpClient();
-        FormBody.Builder body = new FormBody.Builder();
-        body.add("type", "sbadd");
-        body.add("bedid", bedid);
-        body.add("id", id);
-        for (String mc : array_mc) {
-            body.add("mc[]", mc);
-        }
-        for (String zb : array_zb) {
-            body.add("zb[]", zb);
-        }
-        body.add("PatientID", familyBedModelBean.getData().getPatientID());
-        body.add("PatientName", familyBedModelBean.getData().getName());
-//        body.add("Xy1", Xy1);
-//        body.add("Xy2", Xy2);
-//        body.add("Inlet", "App");
-        Request request = new Request.Builder()
-                .url(ServerUrl.base_url_post)
-                .post(body.build())
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-//                System.out.println("响应失败！");
-
-                handler.sendEmptyMessage(ServerUrl.handler_error);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String result = response.body().string();
-//                    System.out.println("响应成功："+result);
-                    handler.sendEmptyMessage(ServerUrl.handler_success);
-                }
-            }
-        });
-    }
-    // endregion 数据提交：体征上报
 
     // region 数据提交：今日用药未服药->已服药
     public void post(String sd, String ids) {
@@ -747,155 +646,4 @@ public class MainFamilyBed extends Activity {
     }
     // endregion 数据提交：今日用药未服药->已服药
 
-    // region 获取数据：体征上报
-
-    /**
-     * 根据床号获取体征上报数据，构建页面
-     *
-     * @param strBedID 床号
-     */
-    public void getSync(String strBedID) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .get()
-                        .url(ServerUrl.get_physical_sign + strBedID)
-                        .build();
-                Call call = client.newCall(request);
-                try {
-                    //同步发送请求
-                    Response response = call.execute();
-                    if (response.isSuccessful()) {
-//                        String strResult = response.body().string();
-
-//                        handler.sendEmptyMessage(0);
-                        // 创建消息
-                        Message msg = new Message();
-                        Bundle bundle = new Bundle();
-                        msg.what = ServerUrl.handler_success_physical_sign_get;
-                        bundle.putString("strResult", response.body().string());
-                        msg.setData(bundle);
-                        handler.sendMessage(msg);
-//                        System.out.println("text:" + strResult);
-//                        System.out.println("请求成功");
-
-                    } else {
-//                        System.out.println("请求失败");
-                        handler.sendEmptyMessage(ServerUrl.handler_error);
-                    }
-                } catch (IOException e) {
-//                    System.out.println("error");
-                    handler.sendEmptyMessage(ServerUrl.handler_error);
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-    // endregion 获取数据：体征上报
-
-    // region 获取数据：体征上报->每日体征上报
-
-    /**
-     * 根据床号获取体征上报数据，构建页面
-     *
-     * @param strBedID 床号
-     */
-    public void getMeiRiSb(String strBedID) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .get()
-                        .url(ServerUrl.get_daily_reporting + strBedID)
-                        .build();
-                Call call = client.newCall(request);
-                try {
-                    //同步发送请求
-                    Response response = call.execute();
-                    if (response.isSuccessful()) {
-//                        String strResult = response.body().string();
-
-//                        handler.sendEmptyMessage(0);
-                        // 创建消息
-                        Message msg = new Message();
-                        Bundle bundle = new Bundle();
-                        msg.what = ServerUrl.handler_success_daily_reporting_get;
-                        bundle.putString("strResult", response.body().string());
-                        msg.setData(bundle);
-                        handler.sendMessage(msg);
-//                        System.out.println("text:" + strResult);
-//                        System.out.println("请求成功");
-
-                    } else {
-//                        System.out.println("请求失败");
-                        handler.sendEmptyMessage(ServerUrl.handler_error);
-                    }
-                } catch (IOException e) {
-//                    System.out.println("error");
-                    handler.sendEmptyMessage(ServerUrl.handler_error);
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-    // endregion 获取数据：体征上报->每日体征上报
-
-    // region 构建页面：体征上报
-    private void initPhysicalSign(PhysicalSignJsonBean physicalSignJsonBean) throws JSONException {
-
-        // 实例化用于存放各个体征上报档案指标的ListView对象
-        ListView list_physical_sign = (ListView) view_custom_list.findViewById(R.id.list_physical_sign);
-
-        // 实例化ListView对象的数据源
-        ArrayList<PhysicalSignJsonModel> physicalSignJsonModelList = new ArrayList<PhysicalSignJsonModel>();
-
-        // 遍历体征上报档案数据，为ListView对象的数据源填充数据
-        for (PhysicalSignJsonModel physicalSignJsonModel : physicalSignJsonBean.getData().getPhysicalSign()) {
-
-            // 把家庭病床数据源中的体征指标字符串转换为体征指标字符串数组
-            String[] strArraySbZb = familyBedModelBean.getData().getSbZb().split(",");
-            // 遍历体征指标字符串数组
-            for (int i = 0; i < strArraySbZb.length; i++) {
-
-                // 体征指标字符串数组中当前索引对应的指标
-                String strSbZb = strArraySbZb[i];
-
-                // 判断”当前索引对应的指标“与”征上报档案数据“当前对应的指标名称一致，则为ListView对象的数据源填充数据
-                if (strSbZb.equals(physicalSignJsonModel.getName())) {
-                    // 为ListView对象的数据源填充数据
-                    physicalSignJsonModelList.add(physicalSignJsonModel);
-                }
-            }
-        }
-
-        // 创建ArrayAdapter
-        ListViewAdapter<PhysicalSignJsonModel> physicalSignJsonModelAdapter = new ListViewAdapter<PhysicalSignJsonModel>((ArrayList) physicalSignJsonModelList, R.layout.list_item_physical_sign) {
-            @Override
-            public void bindView(ViewHolder holder, PhysicalSignJsonModel obj) {
-                // 设置体征指标名称
-                holder.setText(R.id.txt_name, obj.getName());
-                // 设置体征指标单位
-                holder.setText(R.id.txt_unit, obj.getUnit());
-                // 判断如果体征指标名称是”血压“，则对体征指标填写控件进行显示控制
-                if (obj.getName().equals("血压")) {
-                    // 血压之外的控件隐藏
-                    holder.setVisibility(R.id.txt_name_value, View.GONE);
-                    holder.setInputType(R.id.txt_name_value_left,InputType.TYPE_CLASS_TEXT);
-                    holder.setInputType(R.id.txt_name_value_right,InputType.TYPE_CLASS_TEXT);
-                } else {
-                    // 血压相关的控件隐藏
-                    holder.setVisibility(R.id.txt_name_value_left, View.GONE);
-                    holder.setVisibility(R.id.txt_split, View.GONE);
-                    holder.setVisibility(R.id.txt_name_value_right, View.GONE);
-                    holder.setInputType(R.id.txt_name_value,InputType.TYPE_CLASS_TEXT);
-                }
-            }
-        };
-        // 通过调用setAdapter方法为ListView设置Adapter设置适配器
-        list_physical_sign.setAdapter(physicalSignJsonModelAdapter);
-    }
-    // endregion 构建页面：体征上报
 }

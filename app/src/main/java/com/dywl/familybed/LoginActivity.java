@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -140,15 +141,18 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         String strResult = response.body().string();
 
-
                         FamilyBedModelBean familyBedModelBean = JSONHelper.parseObject(strResult, FamilyBedModelBean.class);
 
+                        MyApp.setFamilyBedModelBean(familyBedModelBean);
                         //登录成功后跳转页面
+//                        Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
                         Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("familyBedModelBean", familyBedModelBean);
                         intent.putExtras(bundle);
                         startActivity(intent);
+
+
 
                         //完成跳转，关闭此activity（避免返回至此）
                         finish();

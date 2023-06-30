@@ -5,4 +5,11 @@
     <color name="transparent">#60000000</color>
 
     <color name="main_color">#2D73E2</color>>
+    <color name="text_color_white">#ffffff</color>
+
+    <color name="text_line_color">#dfdfdd</color>
+    <color name="text_color_sm">#666666</color>
+    <color name="main_bg_color">#F0F3FD</color>
+
+    <color name="color_red_low">#deaca6</color>
 </resources>

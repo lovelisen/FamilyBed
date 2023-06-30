@@ -31,7 +31,6 @@
             android:background="@drawable/btn_selctor_exit" />
 
     </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/ly_detail"
         android:layout_width="wrap_content"

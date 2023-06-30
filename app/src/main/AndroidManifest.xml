@@ -37,6 +37,22 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
+
+        <activity
+            android:name="com.dywl.familybed.AccountManagerActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+        <service
+            android:name=".service.JobSchedulerService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+
+        <activity
+            android:name="com.dywl.familybed.DailyReportingActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

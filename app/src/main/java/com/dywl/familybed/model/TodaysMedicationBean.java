@@ -11,6 +11,8 @@ public class TodaysMedicationBean {
 
     private String ids;
 
+    private String voices;
+
 
     public ListViewAdapter<TodaysMedicationBeanChild> getAdapter() {
         return adapter;
@@ -52,5 +54,13 @@ public class TodaysMedicationBean {
 
     public void setIds(String ids) {
         this.ids = ids;
+    }
+
+    public String getVoices() {
+        return voices;
+    }
+
+    public void setVoices(String voices) {
+        this.voices = voices;
     }
 }

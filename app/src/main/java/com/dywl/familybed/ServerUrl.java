@@ -24,10 +24,10 @@ public class ServerUrl {
 //    public static final String BASE_URL_IP = "http://open.dywyhs.com/project/familybed/";
 
     //临时
-    public static final String BASE_URL_IP = "http://192.168.3.4:8082/";
+//    public static final String BASE_URL_IP = "http://10.105.10.138:8082/";
 
     //测试
-    //public static final String BASE_URL_IP = "http://192.168.3.4:8082/";
+    public static final String BASE_URL_IP = "http://192.168.3.4:8082/";
     // endregion 服务器地址：患者端
 
     // region 接口定义：患者端

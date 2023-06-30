@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.dywl.familybed.model.FamilyBedModelBean;
 import com.dywl.familybed.utils.ContextUitls;
 import com.dywl.familybed.utils.ImageLoaderUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -16,6 +17,17 @@ public class MyApp  extends MultiDexApplication {
     //region 声明变量及类型
     public static Context instance;
     public static volatile MyApp app;
+
+
+    public static FamilyBedModelBean getFamilyBedModelBean() {
+        return familyBedModelBean;
+    }
+
+    public static void setFamilyBedModelBean(FamilyBedModelBean familyBedModelBean) {
+        MyApp.familyBedModelBean = familyBedModelBean;
+    }
+
+    private static FamilyBedModelBean familyBedModelBean;
 
     private static DisplayImageOptions options;
     public static String spName = "LoanSP";
