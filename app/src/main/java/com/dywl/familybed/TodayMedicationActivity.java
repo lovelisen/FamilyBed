@@ -66,6 +66,7 @@ public class TodayMedicationActivity extends BaseActivity {
     private AlertDialog.Builder builder = null;
 
     private WhyTTS whyTTS;
+    String toolTipText = "null";
     //region 初始化今日体征上报页面
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,9 @@ public class TodayMedicationActivity extends BaseActivity {
         ac_back_icon.setOnClickListener(new View.OnClickListener() {//添加点击事件
             @Override
             public void onClick(View v) {
-                whyTTS.pause();
+                if(toolTipText !="null"){
+                    whyTTS.pause();
+                }
                 Intent intent = new Intent(TodayMedicationActivity.this, MainFamilyBed.class);//点击跳转到设置窗口
                 startActivity(intent);
             }
@@ -412,9 +415,6 @@ public class TodayMedicationActivity extends BaseActivity {
                 holder.setTag(R.id.btn_take_medicine, MyApp.getFamilyBedModelBean().getData().getPatientID() + "!" + MyApp.getFamilyBedModelBean().getData().getID() + "!" + obj.getPeriod() + "!" + obj.getIds());
                 holder.setTag(R.id.imageView_voice_ico, obj.getVoices());
                 holder.setTooltipText(R.id.imageView_voice_ico, "start");
-                if (obj.getUsed().equals("未服药")) {
-                    holder.setImageResource(R.id.btn_take_medicine, R.mipmap.dialog_weifuyao);
-                }
                 holder.setOnClickListener(R.id.imageView_voice_ico, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -432,7 +432,6 @@ public class TodayMedicationActivity extends BaseActivity {
                         // endregion 初始化设置所有语音播放按钮的图标和状态
 
                         // region 控制播放、停止
-                        String toolTipText = null;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             toolTipText = v.getTooltipText().toString();
                         }
@@ -453,20 +452,34 @@ public class TodayMedicationActivity extends BaseActivity {
                         // endregion 控制播放、停止
                     }
                 });
-                holder.setOnClickListener(R.id.btn_take_medicine, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String[] split = v.getTag().toString().split("!");
+
+                if (obj.getUsed().equals("未服药")) {
+                    holder.setImageResource(R.id.btn_take_medicine, R.mipmap.dialog_weifuyao);
+                    holder.setOnClickListener(R.id.btn_take_medicine, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String[] split = v.getTag().toString().split("!");
 //                        Toast.makeText(getApplicationContext(), "床号："+split[1]+"    患者编号："+split[0]+"    时段："+split[2]+"    IDS："+split[3], Toast.LENGTH_SHORT).show();
-                        // 调用已服药接口
-                        post(split[2], split[3]);
-                    }
-                });
+                            // 调用已服药接口
+                            post(split[2], split[3]);
+
+                            holder.setImageResource(R.id.btn_take_medicine, R.mipmap.dialog_yifuyao);
+
+                            holder.setText(R.id.btn_take_medicine, "已服药");
+                            holder.setOnClickListener(R.id.btn_take_medicine,null);
+
+//                            holder.setEnabled(R.id.btn_take_medicine,false);
+//                            getTodaysMedicationData();
+
+                        }
+                    });
+                }
             }
         };
-
         //ListView设置Adapter：
         grid_today_medication.setAdapter(todaysMedicationAdapter);
+
+        todaysMedicationAdapter.notifyDataSetChanged();
     }
     // endregion 构建页面:今日用药提醒
 

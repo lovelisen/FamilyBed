@@ -267,6 +267,14 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
             return this;
         }
 
+        /**
+         * 设置标签
+         */
+        public ViewHolder setEnabled(int id, boolean enabled) {
+            getView(id).setEnabled(enabled);
+            return this;
+        }
+
         //其他方法可自行扩展
 
     }
