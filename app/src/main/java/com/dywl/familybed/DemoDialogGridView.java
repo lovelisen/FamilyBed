@@ -29,7 +29,6 @@ import com.dywl.familybed.utils.WebTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -285,7 +284,7 @@ public class DemoDialogGridView extends AppCompatActivity {
 //        dataTodaysMedicationBeanChild_ZhongWu.add(todaysMedicationBeanChild_ZaoShang);
 //        dataTodaysMedicationBeanChild_WanShang.add(todaysMedicationBeanChild_ZhongWu);
 
-        todaysMedicationAdapterChild_ZaoShang = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ZaoShang, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild_ZaoShang = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ZaoShang, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -296,7 +295,7 @@ public class DemoDialogGridView extends AppCompatActivity {
             }
         };
 
-        todaysMedicationAdapterChild_ZhongWu = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ZhongWu, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild_ZhongWu = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ZhongWu, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -307,7 +306,7 @@ public class DemoDialogGridView extends AppCompatActivity {
             }
         };
 
-        todaysMedicationAdapterChild_WanShang = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_WanShang, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild_WanShang = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_WanShang, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -317,7 +316,7 @@ public class DemoDialogGridView extends AppCompatActivity {
                 holder.setText(R.id.txt_entrust, "嘱托：" + obj.getEntrust());
             }
         };
-        todaysMedicationAdapterChild_ShuiQian = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ShuiQian, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild_ShuiQian = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild_ShuiQian, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -345,7 +344,7 @@ public class DemoDialogGridView extends AppCompatActivity {
         dataTodaysMedicationBean.add(todaysMedicationBean_WanShang);
         dataTodaysMedicationBean.add(todaysMedicationBean_ShuiQian);
 
-        todaysMedicationAdapter = new ListViewAdapter<TodaysMedicationBean>((ArrayList) dataTodaysMedicationBean, R.layout.list_item_todays_medication) {
+        todaysMedicationAdapter = new ListViewAdapter<TodaysMedicationBean>((ArrayList) dataTodaysMedicationBean, R.layout.today_medication_list_item) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBean obj) {
                 holder.setText(R.id.txt_today_date, obj.getTodaysDate());

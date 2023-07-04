@@ -108,7 +108,7 @@ public class DemoDialogListView extends AppCompatActivity {
         dataTodaysMedicationBeanChild1.add(todaysMedicationBeanChild);
         dataTodaysMedicationBeanChild2.add(todaysMedicationBeanChild1);
 
-        todaysMedicationAdapterChild = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -119,7 +119,7 @@ public class DemoDialogListView extends AppCompatActivity {
             }
         };
 
-        todaysMedicationAdapterChild1 = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild1, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild1 = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild1, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -130,7 +130,7 @@ public class DemoDialogListView extends AppCompatActivity {
             }
         };
 
-        todaysMedicationAdapterChild2 = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild2, R.layout.list_item_todays_medication_child) {
+        todaysMedicationAdapterChild2 = new ListViewAdapter<TodaysMedicationBeanChild>((ArrayList) dataTodaysMedicationBeanChild2, R.layout.today_medication_list_item_child) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBeanChild obj) {
                 holder.setText(R.id.txt_drug, obj.getDrug());
@@ -159,7 +159,7 @@ public class DemoDialogListView extends AppCompatActivity {
         dataTodaysMedicationBean.add(todaysMedicationBean1);
         dataTodaysMedicationBean.add(todaysMedicationBean2);
 
-        todaysMedicationAdapter = new ListViewAdapter<TodaysMedicationBean>((ArrayList) dataTodaysMedicationBean, R.layout.list_item_todays_medication) {
+        todaysMedicationAdapter = new ListViewAdapter<TodaysMedicationBean>((ArrayList) dataTodaysMedicationBean, R.layout.today_medication_list_item) {
             @Override
             public void bindView(ViewHolder holder, TodaysMedicationBean obj) {
                 holder.setText(R.id.txt_today_date, obj.getTodaysDate());

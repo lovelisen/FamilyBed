@@ -48,4 +48,9 @@ dependencies {
     implementation files('libs/universal-image-loader-1.9.3.jar')
     //百度地图
     implementation files('libs/BaiduLBS_Android.jar')
+
+    // WebRTC目前版本
+    implementation 'io.github.webrtc-sdk:android:114.5735.01'
+    // 仓库地址：
+//    https://bintray.com/google/webrtc/google-webrtc/1.0.28513
 }

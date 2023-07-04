@@ -87,7 +87,14 @@ public class TodaysMedicationJsonDrug {
     }
 
     public void setEntrust(String Entrust) {
-        this.Entrust = Entrust;
+        if (!String.valueOf(Entrust).isEmpty()) {
+            if (String.valueOf(Entrust).equals("null")) {
+                this.Entrust = "无";
+
+            } else {
+                this.Entrust = Entrust;
+            }
+        }
     }
     public String getEntrust() {
         return Entrust;

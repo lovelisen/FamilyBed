@@ -1,6 +1,7 @@
 package com.dywl.familybed.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.InputType;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -254,6 +255,15 @@ public abstract class ListViewAdapter<T> extends BaseAdapter {
          */
         public ViewHolder setTag(int id, Object obj) {
             getView(id).setTag(obj);
+            return this;
+        }
+        /**
+         * 设置标签
+         */
+        public ViewHolder setTooltipText(int id, CharSequence text) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getView(id).setTooltipText(text);
+            }
             return this;
         }
 
