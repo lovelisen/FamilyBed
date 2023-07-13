@@ -21,13 +21,13 @@ public class ServerUrl {
 
     // region 服务器地址：患者端
     //正式
-//    public static final String BASE_URL_IP = "http://open.dywyhs.com/project/familybed/";
+    public static final String BASE_URL_IP = "http://open.dywyhs.com/project/familybed/";
 
     //临时
-//    public static final String BASE_URL_IP = "http://10.105.10.138:8082/";
+//    public static final String BASE_URL_IP = "https://dywl.natapp4.cc/";
 
     //测试
-    public static final String BASE_URL_IP = "http://192.168.3.4:8082/";
+//    public static final String BASE_URL_IP = "http://192.168.3.4:8082/";
     // endregion 服务器地址：患者端
 
     // region 接口定义：患者端
@@ -48,6 +48,8 @@ public class ServerUrl {
 
     // 获取今日用药数据
     public static final String get_today_medication = base_url_get + "?func=getDrug&BedID=";
+    // 获取今日用药数据
+    public static final String get_rtc_engine_config = base_url_get + "?func=getRtcEngineConfig";
     //endregion 接口定义：患者端
 
     //region 常量定义：Handler专用

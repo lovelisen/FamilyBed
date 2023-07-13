@@ -36,6 +36,8 @@ public class MainFamilyBed extends Activity {
     private ImageView imageView4;
     // 今日用药
     private ImageView imageView5;
+    // 在线咨询
+    private ImageView imageView7;
     private View view_custom;
     private View view_custom_list;
     private AlertDialog.Builder builder_list = null;
@@ -70,6 +72,7 @@ public class MainFamilyBed extends Activity {
         textView10 = findViewById(R.id.main_patient_note);
         imageView4 = findViewById(R.id.imageView4);
         imageView5 = findViewById(R.id.imageView5);
+        imageView7 = findViewById(R.id.imageView7);
 
         textView1.setText(familyBedModelBean.getData().getName() + "(" + familyBedModelBean.getData().getSex() + ")");
         textView2.setText("病种：" + familyBedModelBean.getData().getDisease());
@@ -188,6 +191,16 @@ public class MainFamilyBed extends Activity {
         });
         // endregion 点击事件：弹出页面-今日用药
 
+        // region 点击事件：弹出页面-今日用药
+        imageView7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainFamilyBed.this, VideoChatViewActivity.class);
+                startActivity(intent);
+            }
+        });
+        // endregion 点击事件：弹出页面-今日用药
 
     }
     // endregion 实现onCreate抽象方法

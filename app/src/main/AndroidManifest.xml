@@ -8,10 +8,22 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
 
-<!--    &lt;!&ndash;照相机&ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+    <!--照相机-->
+    <uses-permission android:name="android.permission.CAMERA" />
 <!--    &lt;!&ndash;麦克风&ndash;&gt;-->
 <!--    <uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- 对于 Android 12.0 及以上设备，还需要添加如下权限： -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"  />
+
+
+
 
     <supports-screens
         android:smallScreens="true"
@@ -22,7 +34,6 @@
     <application
         android:name=".MyApp"
         android:usesCleartextTraffic="true"
-        android:allowBackup="true"
         android:icon="@mipmap/home_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/home_logo"
@@ -66,6 +77,22 @@
             android:name="com.dywl.familybed.TodayMedicationActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden"/>
+
+
+        <activity
+            android:name="com.dywl.familybed.VideoChatViewActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullScreenVideoTheme"
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--            </intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

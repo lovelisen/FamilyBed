@@ -87,8 +87,9 @@ public class TodayMedicationActivity extends BaseActivity {
                 if(toolTipText !="null"){
                     whyTTS.pause();
                 }
-                Intent intent = new Intent(TodayMedicationActivity.this, MainFamilyBed.class);//点击跳转到设置窗口
-                startActivity(intent);
+//                Intent intent = new Intent(TodayMedicationActivity.this, MainFamilyBed.class);//点击跳转到设置窗口
+//                startActivity(intent);
+                finish();
             }
         });
         // endregion 按钮事件：返回
@@ -100,6 +101,8 @@ public class TodayMedicationActivity extends BaseActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(AccountManagerActivity.this, SettingActivity.class);//点击跳转到设置窗口
 //                startActivity(intent);
+
+                Toast.makeText(getApplicationContext(), "系统提示：功能建设中……", Toast.LENGTH_LONG).show();
             }
         });
         // endregion 按钮事件：查看历史
@@ -421,14 +424,6 @@ public class TodayMedicationActivity extends BaseActivity {
                         // region 初始化设置所有语音播放按钮的图标和状态
                         GridView grid_today_medication = (GridView) findViewById(R.id.grid_today_medication);
                         int listChildCount = grid_today_medication.getChildCount();
-                        for (int i = 0; i < listChildCount; i++) {
-                            View view = grid_today_medication.getChildAt(i);
-                            ImageView imageView_voice_ico = (ImageView) view.findViewById(R.id.imageView_voice_ico);
-                            imageView_voice_ico.setImageResource(R.mipmap.voice_ico_start);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                v.setTooltipText("start");
-                            }
-                        }
                         // endregion 初始化设置所有语音播放按钮的图标和状态
 
                         // region 控制播放、停止
@@ -438,6 +433,14 @@ public class TodayMedicationActivity extends BaseActivity {
                         if(toolTipText == "start"){
                             whyTTS.speak(v.getTag().toString());
 
+                            for (int i = 0; i < listChildCount; i++) {
+                                View view = grid_today_medication.getChildAt(i);
+                                ImageView imageView_voice_ico = (ImageView) view.findViewById(R.id.imageView_voice_ico);
+                                imageView_voice_ico.setImageResource(R.mipmap.voice_ico_start);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    v.setTooltipText("start");
+                                }
+                            }
                             ((ImageView) v).setImageResource(R.mipmap.voice_ico_stop);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 v.setTooltipText("stop");

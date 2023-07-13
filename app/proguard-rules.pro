@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#防止腾讯云 SDK 的代码被混淆
+#-keep class com.tencent.** { *; }
+
+##防止声网 SDK 的代码被混淆
+#-keep class io.agora.**{*;}

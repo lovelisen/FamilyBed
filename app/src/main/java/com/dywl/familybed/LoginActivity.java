@@ -19,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dywl.familybed.model.FamilyBedModelBean;
+import com.dywl.familybed.model.RtcEngineConfigJsonBean;
 import com.dywl.familybed.utils.JSONHelper;
 import com.dywl.familybed.utils.MultipleResult;
 import com.dywl.familybed.utils.ToastUtil;
+import com.dywl.familybed.utils.WebTool;
 
 import org.json.JSONException;
 
@@ -144,6 +146,9 @@ public class LoginActivity extends AppCompatActivity {
                         FamilyBedModelBean familyBedModelBean = JSONHelper.parseObject(strResult, FamilyBedModelBean.class);
 
                         MyApp.setFamilyBedModelBean(familyBedModelBean);
+
+
+                        getRtcEngineConfig();
                         //登录成功后跳转页面
 //                        Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
                         Intent intent = new Intent(LoginActivity.this, MainFamilyBed.class);
@@ -151,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
                         bundle.putSerializable("familyBedModelBean", familyBedModelBean);
                         intent.putExtras(bundle);
                         startActivity(intent);
-
 
 
                         //完成跳转，关闭此activity（避免返回至此）
@@ -227,4 +231,49 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    // region 获取数据：视频通话配置
+    private void getRtcEngineConfig() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //在新线程中获取数据，通过handler判断是否获取到数据
+                    String result = WebTool.singleData(ServerUrl.get_rtc_engine_config);
+
+                    if (!result.equals("failed")) {
+
+
+                        if (result.contains("成功")) {
+//                            // 创建消息
+//                            Message msg = new Message();
+//                            Bundle bundle = new Bundle();
+//                            msg.what = ServerUrl.handler_success_today_medication_get;
+//                            bundle.putString("strResult", result);
+//                            msg.setData(bundle);
+//                            handler.sendMessage(msg);
+
+                            RtcEngineConfigJsonBean rtcEngineConfigJsonBean = JSONHelper.parseObject(result, RtcEngineConfigJsonBean.class);
+
+                            MyApp.setRtcEngineConfigJsonBean(rtcEngineConfigJsonBean);
+
+                        } else {
+
+                            handler.sendEmptyMessage(ServerUrl.handler_error);
+                        }
+
+                    } else {
+                        handler.sendEmptyMessage(ServerUrl.handler_error);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    // endregion 获取数据：视频通话配置
 }

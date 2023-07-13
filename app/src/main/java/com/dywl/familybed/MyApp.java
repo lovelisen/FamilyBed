@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
 
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
 import com.dywl.familybed.model.FamilyBedModelBean;
+import com.dywl.familybed.model.RtcEngineConfigJsonBean;
 import com.dywl.familybed.utils.ContextUitls;
 import com.dywl.familybed.utils.ImageLoaderUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -28,6 +27,17 @@ public class MyApp  extends MultiDexApplication {
     }
 
     private static FamilyBedModelBean familyBedModelBean;
+
+
+    public static RtcEngineConfigJsonBean getRtcEngineConfigJsonBean() {
+        return rtcEngineConfigJsonBean;
+    }
+
+    public static void setRtcEngineConfigJsonBean(RtcEngineConfigJsonBean rtcEngineConfigJsonBean) {
+        MyApp.rtcEngineConfigJsonBean = rtcEngineConfigJsonBean;
+    }
+
+    private static RtcEngineConfigJsonBean rtcEngineConfigJsonBean;
 
     private static DisplayImageOptions options;
     public static String spName = "LoanSP";
@@ -59,9 +69,9 @@ public class MyApp  extends MultiDexApplication {
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.mipmap.ic_default_head)// 设置图片Uri为空或是错误的时候显示的图片
-                .showImageOnFail(R.mipmap.ic_default_head)// 设置图片加载/解码过程中错误时候显示的图片
-                .showImageOnLoading(R.mipmap.ic_default_head)// 设置下载的时候显示的图片
+                .showImageForEmptyUri(R.mipmap.icon_common_default_head)// 设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.icon_common_default_head)// 设置图片加载/解码过程中错误时候显示的图片
+                .showImageOnLoading(R.mipmap.icon_common_default_head)// 设置下载的时候显示的图片
                 .displayer(new FadeInBitmapDisplayer(300))//是否图片加载好后渐入的动画时间，可能会出现闪动
                 .cacheInMemory(true)//设置下载的图片是否缓存在内存中
                 .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中

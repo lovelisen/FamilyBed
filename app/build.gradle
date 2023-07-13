@@ -17,6 +17,11 @@ android {
 
 
         multiDexEnabled true //启用继承multiDexEnabled  突破64K方法数限制
+
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86_64", "x86"
+        }
     }
 
     buildTypes {
@@ -25,6 +30,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets { main { jniLibs.srcDirs = ['libs'] } }//jniLibs     已编译好的JNI库目录
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -32,6 +39,10 @@ android {
 }
 
 dependencies {
+//    api project(':tuicallkit')
+//    implementation project(path: ':tuicallkit')
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -53,4 +64,15 @@ dependencies {
     implementation 'io.github.webrtc-sdk:android:114.5735.01'
     // 仓库地址：
 //    https://bintray.com/google/webrtc/google-webrtc/1.0.28513
+
+    // x.y.z，请填写具体的 SDK 版本号，如：4.0.0 或 4.0.0.4。
+    // 通过 SDK 下载获取最新版本号。
+    implementation 'io.agora.rtc:voice-sdk:4.0.0.4'
+
+
+    implementation files('libs/agora-rtc-sdk.jar')
+
+
+    implementation project(path: ':logger')
+
 }
